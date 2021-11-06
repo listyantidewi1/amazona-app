@@ -1,28 +1,17 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import Product from "../components/Product";
-import data from "../data";
-import Rating from "../components/Rating";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { detailsProduct } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { detailsProduct } from "../actions/productActions";
+import Rating from "../components/Rating";
 
 export default function ProductScreen(props) {
-  let param = useParams();
-  /*
-  const product = data.products.find((x) => x._id === param.id);
-  */
+  let params = useParams();
   const dispatch = useDispatch();
-  const productId = param.id;
+  const productId = params.id;
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  /*
-  if (!product) {
-    return <div>Product Not Found!</div>;
-  }
-  */
 
   useEffect(() => {
     dispatch(detailsProduct(productId));
@@ -36,7 +25,7 @@ export default function ProductScreen(props) {
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <div>
-          <Link to="/">Back to results</Link>
+          <Link to="/">Back to result</Link>
           <div className="row top">
             <div className="col-2">
               <img
@@ -56,9 +45,10 @@ export default function ProductScreen(props) {
                     numReviews={product.numReviews}
                   ></Rating>
                 </li>
-                <li>Price: Rp{product.price}</li>
+                <li>Pirce : ${product.price}</li>
                 <li>
-                  <p>Description: {product.description}</p>
+                  Description:
+                  <p>{product.description}</p>
                 </li>
               </ul>
             </div>
@@ -68,7 +58,7 @@ export default function ProductScreen(props) {
                   <li>
                     <div className="row">
                       <div>Price</div>
-                      <div className="price">Rp {product.price}</div>
+                      <div className="price">${product.price}</div>
                     </div>
                   </li>
                   <li>
