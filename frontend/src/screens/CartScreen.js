@@ -1,10 +1,4 @@
 import React from "react";
-import {
-  useParams,
-  useSearchParams,
-  NavLink,
-  useLocation,
-} from "react-router-dom";
 
 export default function CartScreen(props) {
   const productId = props.match.params.id;

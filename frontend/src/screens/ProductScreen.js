@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { detailsProduct } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import Rating from "../components/Rating";
 
 export default function ProductScreen(props) {
-  let params = useParams();
-  let navigate = useNavigate();
   const dispatch = useDispatch();
-  const productId = params.id;
+  const productId = props.match.params.id;
   const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
@@ -18,11 +16,9 @@ export default function ProductScreen(props) {
   useEffect(() => {
     dispatch(detailsProduct(productId));
   }, [dispatch, productId]);
-
   const addToCartHandler = () => {
-    navigate(`/cart/${productId}?qty=${qty}`);
+    props.history.push(`/cart/${productId}?qty=${qty}`);
   };
-
   return (
     <div>
       {loading ? (
@@ -51,7 +47,7 @@ export default function ProductScreen(props) {
                     numReviews={product.numReviews}
                   ></Rating>
                 </li>
-                <li>Price : Rp{product.price}</li>
+                <li>Pirce : ${product.price}</li>
                 <li>
                   Description:
                   <p>{product.description}</p>

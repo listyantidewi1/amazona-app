@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import CartScreen from "./screens/CartScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
@@ -19,11 +19,10 @@ function App() {
           </div>
         </header>
         <main>
-          <Routes>
-            <Route path="/cart/:id?" element={<CartScreen />}></Route>
-            <Route path="/product/:id" element={<ProductScreen />}></Route>
-            <Route exact path="/" element={<HomeScreen />}></Route>
-          </Routes>
+          <Route path="/cart/:id?" element={<CartScreen />}></Route>
+
+          <Route path="/product/:id" element={<ProductScreen />}></Route>
+          <Route exact path="/" element={<HomeScreen />}></Route>
         </main>
         <footer className="row center">All right reserved</footer>
       </div>
