@@ -98,6 +98,10 @@ export default function CartScreen(props) {
               >
                 Proceed to Checkout
               </button>
+              <div>
+                <br />
+                <Link to="/">Continue shopping</Link>
+              </div>
             </li>
           </ul>
         </div>

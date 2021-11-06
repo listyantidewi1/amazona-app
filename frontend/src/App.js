@@ -56,7 +56,10 @@ function App() {
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/" component={HomeScreen} exact></Route>
         </main>
-        <footer className="row center">All right reserved</footer>
+        <footer className="row center">
+          &copy; Rekayasa Perangkat Lunak - SMK Negeri 12 Malang - All right
+          reserved
+        </footer>
       </div>
     </BrowserRouter>
   );
