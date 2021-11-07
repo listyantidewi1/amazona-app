@@ -1,19 +1,37 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { listProducts } from "../actions/productActions";
+import { createProduct, listProducts } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 export default function ProductListScreen(props) {
   const productList = useSelector((state) => state.productList);
-  const dispatch = useDispatch();
   const { loading, error, products } = productList;
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate;
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    if (successCreate) {
+      dispatch({ type: PRODUCT_CREATE_RESET });
+      props.history.push(`/product/${createdProduct._id}/edit`);
+    }
     dispatch(listProducts());
-  }, [dispatch]);
+  }, [dispatch, createdProduct, props.history, successCreate]);
+
   const deleteHandler = () => {
     //TODO: dispatch deleteHandler
+  };
+
+  const createHandler = () => {
+    dispatch(createProduct());
   };
   return (
     <div>
@@ -21,8 +39,19 @@ export default function ProductListScreen(props) {
         <NavLink className="smalltext" to="/dashboard">
           &#8592; Go to admin dashboard
         </NavLink>
+        {"  "} or {"  "}
+        <NavLink className="smalltext" to="/">
+          Continue shopping &#8594;
+        </NavLink>
       </div>
-      <h1>Products</h1>
+      <div className="row">
+        <h1>Products</h1>
+        <button type="button" className="primary" onClick={createHandler}>
+          Add Product
+        </button>
+      </div>
+      {loadingCreate && <LoadingBox></LoadingBox>}
+      {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
