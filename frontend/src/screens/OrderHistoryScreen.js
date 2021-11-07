@@ -17,7 +17,7 @@ export default function OrderHistoryScreen(props) {
     <div>
       <div>
         <NavLink className="smalltext" to="/">
-          &#8592; Back to shopping
+          &#8592; Go shopping
         </NavLink>
       </div>
       <h1>Order History</h1>

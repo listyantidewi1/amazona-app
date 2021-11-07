@@ -61,15 +61,15 @@ export default function OrderScreen(props) {
     <div>
       <div>
         <NavLink className="smalltext" to="/orderhistory">
-          &#8592; Back to Order History
+          &#8592; Go to Order History
         </NavLink>
         {"  "}
         or{"  "}
         <NavLink className="smalltext" to="/">
-          Continue shopping &#8594;
+          Go shopping &#8594;
         </NavLink>
       </div>
-      <h1>Order {order._id}</h1>
+      <h1>Order ID: {order._id}</h1>
       <div className="row top">
         <div className="col-2">
           <ul>
