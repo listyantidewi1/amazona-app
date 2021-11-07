@@ -1,7 +1,11 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { createOrder } from "../actions/orderActions";
 import CheckoutSteps from "../components/CheckoutSteps";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
 
 export default function PlaceOrderScreen(props) {
   var nf = new Intl.NumberFormat();
@@ -9,16 +13,25 @@ export default function PlaceOrderScreen(props) {
   if (!cart.paymentMethod) {
     props.history.push("/payment");
   }
-  const toPrice = (num) => Number(num.toFixed(2)); //5.123 => "5.12" => 5.12
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { loading, success, error, order } = orderCreate;
+  const toPrice = (num) => Number(num.toFixed(2)); // 5.123 => "5.12" => 5.12
   cart.itemsPrice = toPrice(
     cart.cartItems.reduce((a, c) => a + c.qty * c.price, 0)
   );
   cart.shippingPrice = cart.itemsPrice > 1000000 ? toPrice(0) : toPrice(10000);
   cart.taxPrice = toPrice(0.015 * cart.itemsPrice);
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  const dispatch = useDispatch();
   const placeOrderHandler = () => {
-    //TODO: dispatch place order action
+    dispatch(createOrder({ ...cart, orderItems: cart.cartItems }));
   };
+  useEffect(() => {
+    if (success) {
+      props.history.push(`/order/${order._id}`);
+      dispatch({ type: ORDER_CREATE_RESET });
+    }
+  }, [dispatch, order, props.history, success]);
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>
@@ -29,11 +42,10 @@ export default function PlaceOrderScreen(props) {
               <div className="card card-body">
                 <h2>Shipping</h2>
                 <p>
-                  <strong>Name:</strong> {cart.shippingAddress.fullName}
-                  <br />
-                  <strong>Address:</strong> {cart.shippingAddress.address},
-                  {cart.shippingAddress.city},{cart.shippingAddress.postalCode},
-                  {cart.shippingAddress.country}
+                  <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
+                  <strong>Address: </strong> {cart.shippingAddress.address},
+                  {cart.shippingAddress.city}, {cart.shippingAddress.postalCode}
+                  ,{cart.shippingAddress.country}
                 </p>
               </div>
             </li>
@@ -42,13 +54,12 @@ export default function PlaceOrderScreen(props) {
                 <h2>Payment</h2>
                 <p>
                   <strong>Method:</strong> {cart.paymentMethod}
-                  <br />
                 </p>
               </div>
             </li>
             <li>
               <div className="card card-body">
-                <h2>Order Items:</h2>
+                <h2>Order Items</h2>
                 <ul>
                   {cart.cartItems.map((item) => (
                     <li key={item.product}>
@@ -65,8 +76,9 @@ export default function PlaceOrderScreen(props) {
                             {item.name}
                           </Link>
                         </div>
+
                         <div>
-                          {item.qty} x Rp {nf.format(item.price)} = Rp
+                          {item.qty} x Rp{nf.format(item.price)} = Rp
                           {nf.format(item.qty * item.price)}
                         </div>
                       </div>
@@ -85,29 +97,29 @@ export default function PlaceOrderScreen(props) {
               </li>
               <li>
                 <div className="row">
-                  <div>Items:</div>
-                  <div>Rp {nf.format(cart.itemsPrice)}</div>
+                  <div>Items</div>
+                  <div>Rp{nf.format(cart.itemsPrice)}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
-                  <div>Shipping:</div>
-                  <div>Rp {nf.format(cart.shippingPrice)}</div>
+                  <div>Shipping</div>
+                  <div>Rp{nf.format(cart.shippingPrice)}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
-                  <div>Tax:</div>
-                  <div>Rp {nf.format(cart.taxPrice)}</div>
+                  <div>Tax</div>
+                  <div>Rp{nf.format(cart.taxPrice.toFixed(0))}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
                   <div>
-                    <strong>Order Total:</strong>
+                    <strong> Order Total</strong>
                   </div>
                   <div>
-                    <strong>Rp {nf.format(cart.totalPrice)}</strong>
+                    <strong>Rp{nf.format(cart.totalPrice.toFixed(0))}</strong>
                   </div>
                 </div>
               </li>
@@ -121,6 +133,8 @@ export default function PlaceOrderScreen(props) {
                   Place Order
                 </button>
               </li>
+              {loading && <LoadingBox></LoadingBox>}
+              {error && <MessageBox variant="danger">{error}</MessageBox>}
             </ul>
           </div>
         </div>
