@@ -5,6 +5,7 @@ import { addToCart, removeFromCart } from "../actions/cartActions";
 import MessageBox from "../components/MessageBox";
 
 export default function CartScreen(props) {
+  var nf = new Intl.NumberFormat();
   const productId = props.match.params.id;
   const qty = props.location.search
     ? Number(props.location.search.split("=")[1])
@@ -65,7 +66,7 @@ export default function CartScreen(props) {
                       ))}
                     </select>
                   </div>
-                  <div>Rp {item.price}</div>
+                  <div>Rp {nf.format(item.price)}</div>
                   <div>
                     <button
                       type="button"
