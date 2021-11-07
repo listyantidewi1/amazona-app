@@ -273,9 +273,13 @@ img.large {
 
 .table button {
   margin: 0 0.2rem;
-  background-color: lightgray;
+  background-color: rgb(255, 245, 245);
   border: 0;
   box-shadow: 2px 2px 5px grey;
+}
+
+.table button:hover {
+  box-shadow: 2px 2px 5px #f08000;
 }
 
 .smalltext {
