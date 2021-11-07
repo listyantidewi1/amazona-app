@@ -2,7 +2,7 @@ import Axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { detailsOrder, payOrder } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -59,6 +59,16 @@ export default function OrderScreen(props) {
     <MessageBox variant="danger">{error}</MessageBox>
   ) : (
     <div>
+      <div>
+        <NavLink className="smalltext" to="/orderhistory">
+          &#8592; Back to Order History
+        </NavLink>
+        {"  "}
+        or{"  "}
+        <NavLink className="smalltext" to="/">
+          Continue shopping &#8594;
+        </NavLink>
+      </div>
       <h1>Order {order._id}</h1>
       <div className="row top">
         <div className="col-2">

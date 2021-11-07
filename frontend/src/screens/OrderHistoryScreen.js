@@ -17,7 +17,7 @@ export default function OrderHistoryScreen(props) {
     <div>
       <div>
         <NavLink className="smalltext" to="/">
-          &#129056; Back to shopping
+          &#8592; Back to shopping
         </NavLink>
       </div>
       <h1>Order History</h1>
@@ -30,7 +30,7 @@ export default function OrderHistoryScreen(props) {
         <table className="table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>ORDER ID</th>
               <th>DATE</th>
               <th>TOTAL</th>
               <th>PAID</th>

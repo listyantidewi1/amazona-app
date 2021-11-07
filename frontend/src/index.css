@@ -256,6 +256,7 @@ img.large {
 .table {
   width: 100%;
   border-collapse: collapse;
+  border: 0.1rem solid #e4e4e45d;
 }
 .table tbody tr:nth-of-type(odd) {
   background-color: #f4f4f4;
@@ -266,15 +267,17 @@ img.large {
 .table td,
 .table.th {
   text-align: left;
-  border: 0.1rem solid #e4e4e4;
+  border: 0.1rem solid #e4e4e45d;
   padding: 0.5rem;
 }
 
 .table button {
   margin: 0 0.2rem;
   background-color: lightgray;
+  border: 0;
+  box-shadow: 2px 2px 5px grey;
 }
 
 .smalltext {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
