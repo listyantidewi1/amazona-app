@@ -16,6 +16,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import SigninScreen from "./screens/SigninScreen";
+import ProductEditScreen from "./screens/ProductEditScreen";
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -49,7 +50,7 @@ function App() {
                 </Link>
                 <ul className="dropdown-content">
                   <li>
-                    <Link to="/profile">Your Profile</Link>
+                    <Link to="/profile">User Profile</Link>
                   </li>
                   <li>
                     <Link to="/orderhistory">Order History</Link>
@@ -90,11 +91,16 @@ function App() {
         <main>
           <Route path="/cart/:id?" component={CartScreen}></Route>
           <Route path="/product/:id" component={ProductScreen} exact></Route>
+          <Route
+            path="/product/:id/edit"
+            component={ProductEditScreen}
+            exact
+          ></Route>
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/register" component={RegisterScreen}></Route>
           <Route path="/shipping" component={ShippingAddressScreen}></Route>
           <Route path="/payment" component={PaymentMethodScreen}></Route>
-          <Route path="/placeOrder" component={PlaceOrderScreen}></Route>
+          <Route path="/placeorder" component={PlaceOrderScreen}></Route>
           <Route path="/order/:id" component={OrderScreen}></Route>
           <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
           <PrivateRoute
@@ -107,10 +113,7 @@ function App() {
           ></AdminRoute>
           <Route path="/" component={HomeScreen} exact></Route>
         </main>
-        <footer className="row center">
-          &copy; Rekayasa Perangkat Lunak - SMK Negeri 12 Malang - All right
-          reserved
-        </footer>
+        <footer className="row center">All right reserved</footer>
       </div>
     </BrowserRouter>
   );

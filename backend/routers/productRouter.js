@@ -1,8 +1,8 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
-import Product from "../models/productModel.js";
 import data from "../data.js";
-import { isAuth, isAdmin } from "../utils.js";
+import Product from "../models/productModel.js";
+import { isAdmin, isAuth } from "../utils.js";
 
 const productRouter = express.Router();
 
@@ -17,7 +17,7 @@ productRouter.get(
 productRouter.get(
   "/seed",
   expressAsyncHandler(async (req, res) => {
-    //await Product.remove({});
+    // await Product.remove({});
     const createdProducts = await Product.insertMany(data.products);
     res.send({ createdProducts });
   })
@@ -30,7 +30,7 @@ productRouter.get(
     if (product) {
       res.send(product);
     } else {
-      res.status(404).send({ message: "Product not found" });
+      res.status(404).send({ message: "Product Not Found" });
     }
   })
 );
@@ -41,7 +41,7 @@ productRouter.post(
   isAdmin,
   expressAsyncHandler(async (req, res) => {
     const product = new Product({
-      name: "sample name" + Date.now(),
+      name: "sample name " + Date.now(),
       image: "/images/p1.jpg",
       price: 0,
       category: "sample category",
@@ -52,10 +52,7 @@ productRouter.post(
       description: "sample description",
     });
     const createdProduct = await product.save();
-    res.send({
-      message: "Product created successfully",
-      product: createdProduct,
-    });
+    res.send({ message: "Product Created", product: createdProduct });
   })
 );
 

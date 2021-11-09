@@ -27,10 +27,7 @@ export const productListReducer = (
   }
 };
 
-export const productDetailsReducer = (
-  state = { product: {}, loading: true },
-  action
-) => {
+export const productDetailsReducer = (state = { loading: true }, action) => {
   switch (action.type) {
     case PRODUCT_DETAILS_REQUEST:
       return { loading: true };
@@ -42,7 +39,6 @@ export const productDetailsReducer = (
       return state;
   }
 };
-
 export const productCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case PRODUCT_CREATE_REQUEST:
