@@ -1,10 +1,18 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
-import { isAuth } from "../utils.js";
+import { isAdmin, isAuth } from "../utils.js";
 
 const orderRouter = express.Router();
-
+orderRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate("user", "name");
+    res.send(orders);
+  })
+);
 orderRouter.get(
   "/mine",
   isAuth,
@@ -47,7 +55,7 @@ orderRouter.get(
     if (order) {
       res.send(order);
     } else {
-      res.status(404).send({ message: "Order not found" });
+      res.status(404).send({ message: "Order Not Found" });
     }
   })
 );
@@ -67,9 +75,9 @@ orderRouter.put(
         email_address: req.body.email_address,
       };
       const updatedOrder = await order.save();
-      res.send({ message: "Order paid", order: updatedOrder });
+      res.send({ message: "Order Paid", order: updatedOrder });
     } else {
-      res.status(404).send({ message: "Order not found" });
+      res.status(404).send({ message: "Order Not Found" });
     }
   })
 );
