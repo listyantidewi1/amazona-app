@@ -15,23 +15,46 @@ import {
   PRODUCT_DELETE_REQUEST,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_SUCCESS,
+  PRODUCT_CATEGORY_LIST_SUCCESS,
+  PRODUCT_CATEGORY_LIST_REQUEST,
+  PRODUCT_CATEGORY_LIST_FAIL,
 } from "../constants/productConstants";
 
 export const listProducts =
-  ({ seller = "", name = "" }) =>
+  ({
+    seller = "",
+    name = "",
+    category = "",
+    order = "",
+    min = 0,
+    max = 0,
+    rating = 0,
+  }) =>
   async (dispatch) => {
     dispatch({
       type: PRODUCT_LIST_REQUEST,
     });
     try {
       const { data } = await Axios.get(
-        `/api/products?seller=${seller}&name=${name}`
+        `/api/products?seller=${seller}&name=${name}&category=${category}&min=${min}&max=${max}&rating=${rating}&order=${order}`
       );
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });
     }
   };
+
+export const listProductCategories = () => async (dispatch) => {
+  dispatch({
+    type: PRODUCT_CATEGORY_LIST_REQUEST,
+  });
+  try {
+    const { data } = await Axios.get(`/api/products/categories`);
+    dispatch({ type: PRODUCT_CATEGORY_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: PRODUCT_CATEGORY_LIST_FAIL, payload: error.message });
+  }
+};
 
 export const detailsProduct = (productId) => async (dispatch) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
