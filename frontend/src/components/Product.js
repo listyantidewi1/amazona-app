@@ -4,6 +4,7 @@ import Rating from "./Rating";
 
 export default function Product(props) {
   const { product } = props;
+  var nf = new Intl.NumberFormat();
   return (
     <div key={product._id} className="card">
       <Link to={`/product/${product._id}`}>
@@ -17,7 +18,14 @@ export default function Product(props) {
           rating={product.rating}
           numReviews={product.numReviews}
         ></Rating>
-        <div className="price">Rp {product.price}</div>
+        <div className="row">
+          <div className="price">Rp {nf.format(product.price)}</div>
+          <div>
+            <Link to={`/seller/${product.seller._id}`}>
+              {product.seller.seller.name}
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

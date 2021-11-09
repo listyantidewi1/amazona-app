@@ -285,3 +285,14 @@ img.large {
 .smalltext {
   font-size: 1.5rem;
 }
+
+.row.start {
+  justify-content: flex-start;
+}
+
+.col-3 {
+  flex: 32 1 75rem;
+}
+.p-1 {
+  padding: 1rem;
+}
