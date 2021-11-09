@@ -2,11 +2,14 @@ import Axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
-import { detailsOrder, payOrder } from "../actions/orderActions";
+import { Link } from "react-router-dom";
+import { deliverOrder, detailsOrder, payOrder } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  ORDER_DELIVER_RESET,
+  ORDER_PAY_RESET,
+} from "../constants/orderConstants";
 
 export default function OrderScreen(props) {
   var nf = new Intl.NumberFormat();
@@ -14,6 +17,8 @@ export default function OrderScreen(props) {
   const [sdkReady, setSdkReady] = useState(false);
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
 
   const orderPay = useSelector((state) => state.orderPay);
   const {
@@ -21,6 +26,12 @@ export default function OrderScreen(props) {
     error: errorPay,
     success: successPay,
   } = orderPay;
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    error: errorDeliver,
+    success: successDeliver,
+  } = orderDeliver;
   const dispatch = useDispatch();
   useEffect(() => {
     const addPayPalScript = async () => {
@@ -34,8 +45,14 @@ export default function OrderScreen(props) {
       };
       document.body.appendChild(script);
     };
-    if (!order || successPay || (order && order._id !== orderId)) {
+    if (
+      !order ||
+      successPay ||
+      successDeliver ||
+      (order && order._id !== orderId)
+    ) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
     } else {
       if (!order.isPaid) {
@@ -46,11 +63,13 @@ export default function OrderScreen(props) {
         }
       }
     }
-  }, [dispatch, order, orderId, sdkReady, successPay]);
+  }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
-    // TODO: dispatch pay order
     dispatch(payOrder(order, paymentResult));
+  };
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
   };
 
   return loading ? (
@@ -59,17 +78,7 @@ export default function OrderScreen(props) {
     <MessageBox variant="danger">{error}</MessageBox>
   ) : (
     <div>
-      <div>
-        <NavLink className="smalltext" to="/orderhistory">
-          &#8592; Go to Order History
-        </NavLink>
-        {"  "}
-        or{"  "}
-        <NavLink className="smalltext" to="/">
-          Go shopping &#8594;
-        </NavLink>
-      </div>
-      <h1>Order ID: {order._id}</h1>
+      <h1>Order {order._id}</h1>
       <div className="row top">
         <div className="col-2">
           <ul>
@@ -128,8 +137,8 @@ export default function OrderScreen(props) {
                         </div>
 
                         <div>
-                          {item.qty} x Rp {nf.format(item.price)} = Rp{" "}
-                          {nf.format(item.qty * item.price)}
+                          {item.qty} x Rp {item.price} = Rp{" "}
+                          {item.qty * item.price}
                         </div>
                       </div>
                     </li>
@@ -148,19 +157,19 @@ export default function OrderScreen(props) {
               <li>
                 <div className="row">
                   <div>Items</div>
-                  <div>Rp {nf.format(order.itemsPrice)}</div>
+                  <div>Rp {nf.format(order.itemsPrice.toFixed(2))}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
                   <div>Shipping</div>
-                  <div>Rp {nf.format(order.shippingPrice)}</div>
+                  <div>Rp {nf.format(order.shippingPrice.toFixed(2))}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
                   <div>Tax</div>
-                  <div>Rp {nf.format(order.taxPrice)}</div>
+                  <div>Rp {nf.format(order.taxPrice.toFixed(0))}</div>
                 </div>
               </li>
               <li>
@@ -169,7 +178,7 @@ export default function OrderScreen(props) {
                     <strong> Order Total</strong>
                   </div>
                   <div>
-                    <strong>Rp {nf.format(order.totalPrice)}</strong>
+                    <strong>Rp {nf.format(order.totalPrice.toFixed(0))}</strong>
                   </div>
                 </div>
               </li>
@@ -183,12 +192,28 @@ export default function OrderScreen(props) {
                         <MessageBox variant="danger">{errorPay}</MessageBox>
                       )}
                       {loadingPay && <LoadingBox></LoadingBox>}
+
                       <PayPalButton
                         amount={order.totalPrice}
                         onSuccess={successPaymentHandler}
                       ></PayPalButton>
                     </>
                   )}
+                </li>
+              )}
+              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <li>
+                  {loadingDeliver && <LoadingBox></LoadingBox>}
+                  {errorDeliver && (
+                    <MessageBox variant="danger">{errorDeliver}</MessageBox>
+                  )}
+                  <button
+                    type="button"
+                    className="primary block"
+                    onClick={deliverHandler}
+                  >
+                    Deliver Order
+                  </button>
                 </li>
               )}
             </ul>
