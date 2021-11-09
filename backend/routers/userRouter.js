@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import data from "../data.js";
 import User from "../models/userModel.js";
-import { generateToken, isAuth } from "../utils.js";
+import { generateToken, isAdmin, isAuth } from "../utils.js";
 
 const userRouter = express.Router();
 
@@ -46,10 +46,10 @@ userRouter.post(
     });
     const createdUser = await user.save();
     res.send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
+      _id: createdUser._id,
+      name: createdUser.name,
+      email: createdUser.email,
+      isAdmin: createdUser.isAdmin,
       token: generateToken(createdUser),
     });
   })
@@ -66,7 +66,6 @@ userRouter.get(
     }
   })
 );
-
 userRouter.put(
   "/profile",
   isAuth,
@@ -89,4 +88,15 @@ userRouter.put(
     }
   })
 );
+
+userRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.send(users);
+  })
+);
+
 export default userRouter;
