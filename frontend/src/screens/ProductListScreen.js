@@ -81,7 +81,7 @@ export default function ProductListScreen(props) {
                     type="button"
                     class="small"
                     onClick={() =>
-                      props.history.push(`/product/${product._id}`)
+                      props.history.push(`/product/${product._id}/edit`)
                     }
                   >
                     Edit
