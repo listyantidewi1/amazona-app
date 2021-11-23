@@ -234,7 +234,10 @@ function App() {
 
           <Route path="/" component={HomeScreen} exact></Route>
         </main>
-        <footer className="row center">All right reserved</footer>
+        <footer className="row center">
+          &copy; Rekayasa Perangkat Lunak - SMK Negeri 12 Malang - All rights
+          reserved
+        </footer>
       </div>
     </BrowserRouter>
   );
